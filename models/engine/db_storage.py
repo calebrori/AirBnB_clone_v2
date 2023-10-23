@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""This is the file storage class for AirBnB"""
+"""file storage DB for AirBnB"""
 
 from models.base_model import Base
 from models.user import User
@@ -17,12 +17,12 @@ from os import environ
 
 
 class DBStorage:
-    """ Storage for database with SQL Alchemy and MySQL """
+    """ DB with SQL Alchemy and MySQL """
     __engine = None
     __session = None
 
     def __init__(self):
-        """ Constructor """
+        """ environment """
 
         sqlUser = environ.get('HBNB_MYSQL_USER')
         sqlPwd = environ.get('HBNB_MYSQL_PWD')
@@ -38,10 +38,7 @@ class DBStorage:
             Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
-        """
-        Query on the current database session (self.__session)
-        all objects depending of the class name (argument cls)
-        """
+        """query on current DB session (self.__session)"""
 
         session = self.__session
         dic = {}
@@ -64,25 +61,21 @@ class DBStorage:
         return dic
 
     def new(self, obj):
-        """ add the object to the current database session """
+        """ add object to current DB session """
         if obj:
             self.__session.add(obj)
 
     def save(self):
-        """ commit all changes of the current database session """
+        """ commit all changes of current DB session """
         self.__session.commit()
 
     def delete(self, obj=None):
-        """ delete from module import symbol
-        the current database session obj if not None """
+        """ delete from module import symbol """
         if obj:
             self.__session.delete(obj)
 
     def reload(self):
-        """
-        creates all tables in the database
-        creates the current database session
-        """
+        """creates all tables in the DB"""
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
@@ -90,7 +83,5 @@ class DBStorage:
         self.__session = Session()
 
     def close(self):
-        """
-        Closes Session
-        """
+        """close the session"""
         self.__session.close()
